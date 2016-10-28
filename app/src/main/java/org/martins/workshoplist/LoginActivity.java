@@ -130,9 +130,10 @@ public class LoginActivity extends AppCompatActivity {
 
                 // Hide Progress Dialog
                 pDialog.hide();
+
                 // When Http response code is '404'
                 if(statusCode == 404){
-                    Toast.makeText(getApplicationContext(), "Requested resource not found", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Wrong email or password", Toast.LENGTH_LONG).show();
                 }
                 // When Http response code is '500'
                 else if(statusCode == 500){
