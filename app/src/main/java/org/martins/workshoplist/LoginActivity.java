@@ -90,9 +90,9 @@ public class LoginActivity extends AppCompatActivity {
     public void invokeWS(RequestParams params){
         // Show Progress Dialog
         pDialog.show();
+
         // Make RESTful webservice call using AsyncHttpClient object
         AsyncHttpClient client = new AsyncHttpClient();
-        System.out.println("-----");
         client.get(uri,params ,new AsyncHttpResponseHandler() {
 
             // When the response returned by REST has Http response code '200'
@@ -105,15 +105,9 @@ public class LoginActivity extends AppCompatActivity {
                 System.out.println (response);
                 try {
                     // JSON Object
-                    if((new JSONArray(response)).length()!=0) {
-                        JSONObject obj = (new JSONArray(response)).getJSONObject(0);
-                        Toast.makeText(getApplicationContext(), "You are successfully logged in!", Toast.LENGTH_LONG).show();
-                        navigatetoHomeActivity(obj);
-                    }
-                    // Else display error message
-                    else{
-                        Toast.makeText(getApplicationContext(), "Wrong email or password!", Toast.LENGTH_LONG).show();
-                    }
+                    JSONObject obj = (new JSONArray(response)).getJSONObject(0);
+                    Toast.makeText(getApplicationContext(), "You are successfully logged in!", Toast.LENGTH_LONG).show();
+                    navigatetoHomeActivity(obj);
                 } catch (JSONException e) {
                     // TODO Auto-generated catch block
                     Toast.makeText(getApplicationContext(), "Error Occured [Server's JSON response might be invalid]!", Toast.LENGTH_LONG).show();
