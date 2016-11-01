@@ -203,24 +203,16 @@ public class ProductFragment extends Fragment {
 
 
     public void deleteFragment(){
-        RequestParams params = new RequestParams();
-        // Make RESTful webservice call using AsyncHttpClient object
-        AsyncHttpClient client = new AsyncHttpClient();
-        client.delete(uri+user_id+"/"+product_id,params ,new AsyncHttpResponseHandler() {
-            // When the response returned by REST has Http response code '200'
-            @Override
-            public void onSuccess(int i, cz.msebera.android.httpclient.Header[] headers, byte[] bytes) {
-                getActivity().getSupportFragmentManager().popBackStack();
-
-
-            }
-            // When the response returned by REST has Http response code other than '200'
-
-            @Override
-            public void onFailure(int statusCode, cz.msebera.android.httpclient.Header[] headers, byte[] bytes, Throwable error) {
-                treatError(statusCode);
-            }
-        });
+        /**
+         * Create the RequestParams object;
+         * Create the AsyncHttpClient object;
+         * call the delete() method with the uri+user_id+"/"+product_id, params
+         * and the AsynchResponseHandler interface as parameters
+         * on success:
+         *      getActivity().getSupportFragmentManager().popBackStack();
+         * on failure:
+         *      failure(statusCode);
+         */
     }
 
 
@@ -228,55 +220,33 @@ public class ProductFragment extends Fragment {
 
 
     public void editFragment(){
-        RequestParams params = new RequestParams();
-        params.add("product_name",((EditText) getView().findViewById(R.id.product_name)).getText().toString());
-        params.add("product_price",((EditText) getView().findViewById(R.id.product_price)).getText().toString());
-        params.add("product_qty", ((EditText) getView().findViewById(R.id.product_qty)).getText().toString());
-        // Make RESTful webservice call using AsyncHttpClient object
-        AsyncHttpClient client = new AsyncHttpClient();
-        client.put(uri+user_id+"/"+product_id,params ,new AsyncHttpResponseHandler() {
-            // When the response returned by REST has Http response code '200'
-            @Override
-            public void onSuccess(int i, cz.msebera.android.httpclient.Header[] headers, byte[] bytes) {
-                getActivity().getSupportFragmentManager().popBackStack();
-
-
-            }
-            // When the response returned by REST has Http response code other than '200'
-
-            @Override
-            public void onFailure(int statusCode, cz.msebera.android.httpclient.Header[] headers, byte[] bytes, Throwable error) {
-                treatError(statusCode);
-            }
-        });
+        /**
+         * Create the RequestParams object and populate it;
+         * Create the AsyncHttpClient object;
+         * call the put() method with the uri+user_id+"/"+product_id, params
+         * and the AsynchResponseHandler interface as parameters
+         * on success:
+         *      getActivity().getSupportFragmentManager().popBackStack();
+         * on failure:
+         *      failure(statusCode);
+         */
 
     }
 
     public void postFragment(){
-        RequestParams params = new RequestParams();
-        params.add("product_name",((EditText) getView().findViewById(R.id.product_name)).getText().toString());
-        params.add("product_price",((EditText) getView().findViewById(R.id.product_price)).getText().toString());
-        params.add("product_qty", ((EditText) getView().findViewById(R.id.product_qty)).getText().toString());
-        // Make RESTful webservice call using AsyncHttpClient object
-        AsyncHttpClient client = new AsyncHttpClient();
-        client.post(uri+user_id,params ,new AsyncHttpResponseHandler() {
-            // When the response returned by REST has Http response code '200'
-            @Override
-            public void onSuccess(int i, cz.msebera.android.httpclient.Header[] headers, byte[] bytes) {
-                getActivity().getSupportFragmentManager().popBackStack();
-
-            }
-            // When the response returned by REST has Http response code other than '200'
-
-            @Override
-            public void onFailure(int statusCode, cz.msebera.android.httpclient.Header[] headers, byte[] bytes, Throwable error) {
-                treatError(statusCode);
-
-            }
-        });
+        /**
+         * Create the RequestParams object and populate it;
+         * Create the AsyncHttpClient object;
+         * call the post() method with the uri+user_id+"/"+product_id, params
+         * and the AsynchResponseHandler interface as parameters
+         * on success:
+         *      getActivity().getSupportFragmentManager().popBackStack();
+         * on failure:
+         *      failure(statusCode);
+         */
     }
 
-    public void treatError(int statusCode){
+    public void failure(int statusCode){
         // When Http response code is '404'
         if(statusCode == 404){
             Toast.makeText(getActivity().getApplicationContext(), "Requested resource not found", Toast.LENGTH_LONG).show();
@@ -289,5 +259,13 @@ public class ProductFragment extends Fragment {
         else{
             Toast.makeText(getActivity().getApplicationContext(), "Unexpected Error occcured! [Most common Error: Device might not be connected to Internet or remote server is not up and running]", Toast.LENGTH_LONG).show();
         }
+    }
+
+    public RequestParams populateRequest() {
+        RequestParams params = new RequestParams();
+        params.add("product_name", ((EditText) getView().findViewById(R.id.product_name)).getText().toString());
+        params.add("product_price", ((EditText) getView().findViewById(R.id.product_price)).getText().toString());
+        params.add("product_qty", ((EditText) getView().findViewById(R.id.product_qty)).getText().toString());
+        return params;
     }
 }

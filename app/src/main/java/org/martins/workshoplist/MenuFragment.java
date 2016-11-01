@@ -150,49 +150,11 @@ public class MenuFragment extends Fragment {
 
 
     public void getProductsFromWS(){
-        RequestParams params = new RequestParams();
-        // Make RESTful webservice call using AsyncHttpClient object
-        AsyncHttpClient client = new AsyncHttpClient();
-        client.get(uri+user_id,params ,new AsyncHttpResponseHandler() {
-            // When the response returned by REST has Http response code '200'
-
-            @Override
-            public void onSuccess(int i, cz.msebera.android.httpclient.Header[] headers, byte[] bytes) {
-                setwSResponse(new String(bytes));
-                // Hide Progress Dialog
-                try {
-                    // JSON Object
-                    System.out.println(getwSResponse());
-                    setProductArray(new JSONArray(getwSResponse()));
-                    //view.setText (wSResponse);
-                    launchButtons();
-                    configureAddButton();
-                } catch (JSONException e) {
-                    // TODO Auto-generated catch block
-                    Toast.makeText(getActivity().getApplicationContext(), "Error Occured [Server's JSON response might be invalid]!", Toast.LENGTH_LONG).show();
-                    e.printStackTrace();
-
-                }
-
-            }
-
-            @Override
-            public void onFailure(int statusCode, cz.msebera.android.httpclient.Header[] headers, byte[] bytes, Throwable throwable) {
-                String content =new String (bytes);
-                // When Http response code is '404'
-                if(statusCode == 404){
-                    configureAddButton();
-                }
-                // When Http response code is '500'
-                else if(statusCode == 500){
-                    Toast.makeText(getActivity().getApplicationContext(), "Something went wrong at server end", Toast.LENGTH_LONG).show();
-                }
-                // When Http response code other than 404, 500
-                else{
-                    Toast.makeText(getActivity().getApplicationContext(), "Unexpected Error occcured! [Most common Error: Device might not be connected to Internet or remote server is not up and running]", Toast.LENGTH_LONG).show();
-                }
-            }
-        });
+        /**
+         * Create the RequestParams object;
+         * Create the AsyncHttpClient object;
+         * call the get() method with the uri+user_id, params and the AsynchResponseHandler interface as parameters
+         */
     }
 
 
@@ -313,5 +275,39 @@ public class MenuFragment extends Fragment {
         this.wSResponse = wSResponse;
     }
 
+    public void success(byte[] bytes){
+        setwSResponse(new String(bytes));
+        // Hide Progress Dialog
+        try {
+            // JSON Object
+            System.out.println(getwSResponse());
+            setProductArray(new JSONArray(getwSResponse()));
+            //view.setText (wSResponse);
+            launchButtons();
+            configureAddButton();
+        } catch (JSONException e) {
+            // TODO Auto-generated catch block
+            Toast.makeText(getActivity().getApplicationContext(), "Error Occured [Server's JSON response might be invalid]!", Toast.LENGTH_LONG).show();
+            e.printStackTrace();
+
+        }
+
+    }
+
+    public void failure(int statusCode){
+        // When Http response code is '404'
+        if(statusCode == 404){
+            configureAddButton();
+        }
+        // When Http response code is '500'
+        else if(statusCode == 500){
+            Toast.makeText(getActivity().getApplicationContext(), "Something went wrong at server end", Toast.LENGTH_LONG).show();
+        }
+        // When Http response code other than 404, 500
+        else{
+            Toast.makeText(getActivity().getApplicationContext(), "Unexpected Error occcured! [Most common Error: Device might not be connected to Internet or remote server is not up and running]", Toast.LENGTH_LONG).show();
+        }
+
+    }
 
 }

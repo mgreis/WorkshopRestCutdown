@@ -54,16 +54,10 @@ public class LoginActivity extends AppCompatActivity {
         // Check for empty data in the form
         if (!email.isEmpty() && !password.isEmpty()) {
             if(Utility.validate(email)){
-
-                RequestParams params = new RequestParams();
-
-                // Put Http parameter username with value of Email Edit View control
-                params.put("user_email", email);
-                // Put Http parameter password with value of Password Edit Value control
-                params.put("user_password", password);
-                // Invoke RESTful Web Service with Http parameters
-                System.out.println(email+password);
-                invokeWS(params);
+                /**
+                 * create RequestParams object, populate it with "user_email" and "user_password"
+                 * call invokeWS() with the requestParams Object
+                 */
             }
             // When Email is invalid
             else{
@@ -88,55 +82,11 @@ public class LoginActivity extends AppCompatActivity {
     public void invokeWS(RequestParams params){
         // Show Progress Dialog
         pDialog.show();
-
         // Make RESTful webservice call using AsyncHttpClient object
-        AsyncHttpClient client = new AsyncHttpClient();
-        client.get(uri,params ,new AsyncHttpResponseHandler() {
-
-            // When the response returned by REST has Http response code '200'
-            @Override
-            public void onSuccess(int i, cz.msebera.android.httpclient.Header[] headers, byte[] bytes) {
-                String response = new String(bytes);
-                // Hide Progress Dialog
-                pDialog.hide();
-
-                System.out.println (response);
-                try {
-                    // JSON Object
-                    JSONObject obj = (new JSONArray(response)).getJSONObject(0);
-                    Toast.makeText(getApplicationContext(), "You are successfully logged in!", Toast.LENGTH_LONG).show();
-                    navigatetoHomeActivity(obj);
-                } catch (JSONException e) {
-                    // TODO Auto-generated catch block
-                    Toast.makeText(getApplicationContext(), "Error Occured [Server's JSON response might be invalid]!", Toast.LENGTH_LONG).show();
-                    e.printStackTrace();
-
-                }
-
-            }
-
-            // When the response returned by REST has Http response code other than '200'
-
-            @Override
-            public void onFailure(int statusCode, cz.msebera.android.httpclient.Header[] headers, byte[] bytes, Throwable throwable) {
-
-                // Hide Progress Dialog
-                pDialog.hide();
-
-                // When Http response code is '404'
-                if(statusCode == 404){
-                    Toast.makeText(getApplicationContext(), "Wrong email or password", Toast.LENGTH_LONG).show();
-                }
-                // When Http response code is '500'
-                else if(statusCode == 500){
-                    Toast.makeText(getApplicationContext(), "Something went wrong at server end", Toast.LENGTH_LONG).show();
-                }
-                // When Http response code other than 404, 500
-                else{
-                    Toast.makeText(getApplicationContext(), "Unexpected Error occcured! [Most common Error: Device might not be connected to Internet or remote server is not up and running]", Toast.LENGTH_LONG).show();
-                }
-            }
-        });
+        /**
+         * Create the AsyncHttpClient object;
+         * call the get() method with the uri, params and the AsynchResponseHandler interface as parameters
+         */
     }
 
     /**
@@ -153,5 +103,43 @@ public class LoginActivity extends AppCompatActivity {
         }
         startActivity(homeIntent);
     }
+
+    public void success(byte[] bytes){
+        String response = new String(bytes);
+        // Hide Progress Dialog
+        pDialog.hide();
+
+        System.out.println (response);
+        try {
+            // JSON Object
+            JSONObject obj = (new JSONArray(response)).getJSONObject(0);
+            Toast.makeText(getApplicationContext(), "You are successfully logged in!", Toast.LENGTH_LONG).show();
+            navigatetoHomeActivity(obj);
+        } catch (JSONException e) {
+            // TODO Auto-generated catch block
+            Toast.makeText(getApplicationContext(), "Error Occured [Server's JSON response might be invalid]!", Toast.LENGTH_LONG).show();
+            e.printStackTrace();
+
+        }
+    }
+
+    public void failure(int statusCode){
+        // Hide Progress Dialog
+        pDialog.hide();
+
+        // When Http response code is '404'
+        if(statusCode == 404){
+            Toast.makeText(getApplicationContext(), "Wrong email or password", Toast.LENGTH_LONG).show();
+        }
+        // When Http response code is '500'
+        else if(statusCode == 500){
+            Toast.makeText(getApplicationContext(), "Something went wrong at server end", Toast.LENGTH_LONG).show();
+        }
+        // When Http response code other than 404, 500
+        else{
+            Toast.makeText(getApplicationContext(), "Unexpected Error occcured! [Most common Error: Device might not be connected to Internet or remote server is not up and running]", Toast.LENGTH_LONG).show();
+        }
+    }
+
 
 }
